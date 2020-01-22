@@ -6,18 +6,38 @@ import Poke from "../requests/poke";
 const MainScreen = () =>
 {
     const [pokemon,setPokemmon] = useState([]);
+    const [contador,setContador] = useState(0);
+
+    async function getDataAPI(Caminho)
+    {
+        let pokemonsJSON = await Poke.get(Caminho);
+        let arrayPokemons = pokemonsJSON.data.results;
+        setPokemmon(arrayPokemons);
+    }
 
 
     useEffect(() =>
     {
-        async function APIPokemons ()
-        {
-            let pokemonsJSON = await Poke.get('/pokemon');
-            let arrayPokemons = pokemonsJSON.data.results;
-            setPokemmon(arrayPokemons);
-        }
-        APIPokemons();
+        getDataAPI('/pokemon');
     }, []);
+
+    const onClickNext = () =>
+    {
+        setContador(contador+1);
+        const contadorAux = contador+1;
+        console.log(contadorAux);
+        const offset = 20 * contadorAux;
+        getDataAPI('/pokemon?offset='+offset+'&limit=20');
+    }
+
+    const onClickPrevious = () =>
+    {
+        setContador(contador-1);
+        const contadorAux = contador-1;
+        const offset = 20 * contadorAux;
+        console.log(contadorAux);
+        getDataAPI('/pokemon?offset='+offset+'&limit=20');
+    }
 
     return (
         <Container>
@@ -25,6 +45,10 @@ const MainScreen = () =>
             {pokemon.map(data =>{
                 return <StyledLI>{data.name}</StyledLI>
             })}
+            <ContainerButtons>
+                {contador > 0 ? <Button onClick={onClickPrevious}  style={{marginRight: 20}}>ANTERIOR</Button>: null}
+                {contador !== 48 ? <Button onClick={onClickNext}>PRÓXIMO</Button> : null}
+            </ContainerButtons>
         </Container>
     );
 };
@@ -45,7 +69,18 @@ const Logo = styled.img`
 
 const StyledLI = styled.li`
     display: flex;
-    color: blue;
+    color: #3333FF;
+`;
+
+const Button = styled.button`
+    width: 100px;
+    height: 40px;
+    background-color: #3333FF;
+`;
+
+const ContainerButtons = styled.div`
+    flexDirection: 'row';
+    margin-top: 3%;
 `;
 
 export default MainScreen;
