@@ -25,7 +25,6 @@ const MainScreen = () =>
     {
         setContador(contador+1);
         const contadorAux = contador+1;
-        console.log(contadorAux);
         const offset = 20 * contadorAux;
         getDataAPI('/pokemon?offset='+offset+'&limit=20');
     }
@@ -35,7 +34,6 @@ const MainScreen = () =>
         setContador(contador-1);
         const contadorAux = contador-1;
         const offset = 20 * contadorAux;
-        console.log(contadorAux);
         getDataAPI('/pokemon?offset='+offset+'&limit=20');
     }
 
@@ -46,7 +44,8 @@ const MainScreen = () =>
                 return <StyledLI>{data.name}</StyledLI>
             })}
             <ContainerButtons>
-                {contador > 0 ? <Button onClick={onClickPrevious}  style={{marginRight: 20}}>ANTERIOR</Button>: null}
+                {contador > 0 && contador !== 48 ? <Button onClick={onClickPrevious}  style={{marginRight: 20}}>ANTERIOR</Button> : null}
+                {contador === 48 ? <Button onClick={onClickPrevious}>ANTERIOR</Button> : null}
                 {contador !== 48 ? <Button onClick={onClickNext}>PRÓXIMO</Button> : null}
             </ContainerButtons>
         </Container>
